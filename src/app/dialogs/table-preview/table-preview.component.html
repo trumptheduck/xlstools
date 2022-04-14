@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>Xem trước bảng Excel</h2>
+<mat-dialog-content class="mat-typography">
+  <table>
+          <tr *ngFor="let row of data, index as i">
+              <ng-container *ngFor="let cell of row">
+                <th *ngIf="i == 0">{{cell}}</th>
+                <td *ngIf="i != 0">{{cell}}</td>
+              </ng-container>
+          </tr>
+  </table>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Đóng</button>
+</mat-dialog-actions>

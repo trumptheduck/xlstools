@@ -1,0 +1,3 @@
+<section class="cdk-overlay-pane" *ngIf="isDisplayed" [style]="'position: fixed; top: '+ posY +'px; left: '+ posX +'px;'">
+    <button *ngFor="let item of data" color="primary" mat-stroked-button (click)="invoke(item.callback, $event)">{{item.text}} <mat-icon *ngIf="item.icon">{{item.icon}}</mat-icon></button>
+</section>

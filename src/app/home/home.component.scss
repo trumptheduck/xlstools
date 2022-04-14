@@ -1,0 +1,67 @@
+.main {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    &__toolbar {
+        height: 40px;
+        width: 100%;
+        background-color: #1D6F42;
+        display: flex;
+        &__item {
+            padding-left: 25px;
+            padding-right: 25px;
+            height: 100%;
+            width: fit-content;
+            line-height: 39px;
+            font-size: 16px;
+            color: white;
+            cursor: pointer;
+            transition-duration: 0.2s;
+            &:hover {
+                backdrop-filter: brightness(0.9);
+            }
+            mat-icon {
+                position: relative;
+                top: 5px;
+                font-size: 20px;
+            }
+        }
+    }
+    &__inner {
+        display: flex;
+        flex: 1;
+        width: 100%;
+        height: 100%;
+
+    }
+    &__sidebar {
+        width: 300px;
+        height: 100%;
+        border-right: solid 1px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        padding-top: 10px;
+        padding-bottom: 0px;
+        .selected {
+            outline-color: #3F51B5;
+        }
+        mat-card {
+            outline: transparent 2px dashed;   
+            transition: outline-color 0.1s linear;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+    }
+    &__workspace {
+        padding-top: 100px;
+        flex: 1;
+        height: calc(100% - 100px);
+        background-color: beige;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        overflow-y: scroll;
+
+    }
+}

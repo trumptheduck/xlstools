@@ -1,0 +1,38 @@
+<input id="docx" hidden accept=".doc,.docx" type="file" (change)="onDocxInput($event)" placeholder="Docx">
+<input id="xls" hidden multiple accept=".xls,.xlsx" type="file" (change)="onXlsInput($event)" placeholder="Xls">
+<!-- <button (click)="downloadDocument()">Download</button> -->
+
+<section class="main">
+    <div class="main__toolbar">
+        <div class="main__toolbar__item" (click)="openDOCXForm()">Mở file Word <mat-icon>folder_open</mat-icon></div>
+        <div class="main__toolbar__item" (click)="downloadDocument()">Lưu và tải về <mat-icon>download</mat-icon></div>
+        <button title="Hướng dẫn nhập/ xuất file" mat-icon-button style="position: absolute; right: 10px;"><mat-icon style="color: white;"><mat-icon>help_outline</mat-icon></mat-icon></button>
+    </div>
+    <div class="main__inner">
+        <div class="main__sidebar">
+            <h2>Các bảng Excel</h2>
+            <div style="margin-top: 5px; display: flex;">
+                <button title="Nhập bảng Excel mới" mat-stroked-button color="primary" (click)="openXLSForm()"><mat-icon>add</mat-icon></button>
+                <button title="Tự động chèn tất cả bảng đã nhập vào những bảng có cùng tên cột" mat-stroked-button color="primary" style="margin-left: 5px;" (click)="insertAllTablesToTemplates()">Chèn bảng tự động</button>
+                <button title="Hướng dẫn chèn bảng" mat-icon-button color="primary"><mat-icon>help_outline</mat-icon></button>
+            </div>
+            <mat-card *ngFor="let table of tableData, index as i" [ngClass]="{'selected':selectedTableIndex == i}">
+                <p>{{table.name}}</p>
+                <mat-card-actions>
+                  <!-- <button color="primary" mat-icon-button><mat-icon>delete</mat-icon></button> -->
+                  <button color="primary" (click)="openTablePreview(table.data)" mat-button>Xem trước</button>
+                  <button title="Tự động chèn bảng này vào những bảng có cùng tên cột" color="primary" (click)="insertTableToTemplate(table)" mat-button>Chèn</button>
+                  <button color="primary" *ngIf="selectedTableIndex != i" (click)="selectedTableIndex = i" mat-button>Chọn</button>
+                  <button color="primary" *ngIf="selectedTableIndex == i" (click)="selectedTableIndex = -1" mat-button>Bỏ chọn</button>
+                </mat-card-actions>
+              </mat-card>
+        </div>
+        <div class="main__workspace">
+            <mat-spinner *ngIf="isLoading" diameter="50"></mat-spinner>
+            <div id="hidden-output">
+            </div>
+        </div>
+    </div>
+</section>
+
+<app-editor-menu #editorMenu></app-editor-menu>

@@ -109,6 +109,7 @@ export class XlsService {
         tcell.style.border = `solid ${config.borderWidth}px ${config.borderColor}`;
         tcell.style.borderCollapse = "collapse";
         tcell.style.cssText += "white-space: nowrap; overflow:hidden;"
+        if (typeof cell == "number") cell = (Math.floor((cell as number)*100)/100).toString();
         tcell.innerText = cell;
         if (isHeader) tcell.style.fontWeight = "bold";
         tr.append(tcell);
@@ -149,7 +150,7 @@ export class XlsService {
         // this.xls$.resizableGrid(document.getElementById(table.id) as HTMLTableElement);
         resultHTML += pre + table.outerHTML + post;
       })
-      resultHTML += "<br clear=all style='mso-special-character:line-break;page-break-before:always'>";
+      resultHTML = "<p></p>"+ resultHTML + "<br clear=all style='mso-special-character:line-break;page-break-before:always'>";
       return resultHTML;
     }
 
@@ -172,7 +173,7 @@ export class XlsService {
         // this.xls$.resizableGrid(document.getElementById(table.id) as HTMLTableElement);
         resultHTML += pre + table.outerHTML + post;
       })
-      resultHTML += "<br clear=all style='mso-special-character:line-break;page-break-before:always'>";
+      resultHTML = "<p></p>"+ resultHTML + "<br clear=all style='mso-special-character:line-break;page-break-before:always'>";
       return resultHTML;
     }
     return '';

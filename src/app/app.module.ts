@@ -22,6 +22,8 @@ import { TablePreviewDialog } from './dialogs/table-preview/table-preview.compon
 import { MatDialogModule } from '@angular/material/dialog';
 import { EditorMenuComponent } from './components/editor-menu/editor-menu.component';
 import { TableInsertComponent } from './dialogs/table-insert/table-insert.component'
+import { MatMenuModule } from '@angular/material/menu'
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 
 let gapiClientConfig: NgGapiClientConfig = {
@@ -54,7 +56,9 @@ let gapiClientConfig: NgGapiClientConfig = {
       useValue: gapiClientConfig
     }),
     BrowserAnimationsModule,
-    MatDialogModule
+    MatDialogModule,
+    MatMenuModule,
+    MatSnackBarModule
   ],
   providers: [AuthGuard],
   bootstrap: [AppComponent]

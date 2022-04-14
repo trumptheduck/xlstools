@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer } from '@angular/platform-browser';
 import { EditorMenuComponent, MenuItem } from '../components/editor-menu/editor-menu.component';
 import { GoogleConvertService } from '../core/services/convert.service';
@@ -67,7 +68,8 @@ export class HomeComponent implements OnInit {
     private docx$: DocxService,
     private xls$: XlsService,
     private gconvert$: GoogleConvertService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private _snackBar: MatSnackBar
     ) {
     
    }
@@ -75,33 +77,47 @@ export class HomeComponent implements OnInit {
   public get isSignedIn() {
     return this.gconvert$.isSignedIn;
   }
-  
+  public tdir = TableDirection;
   setup(){
     this.getContainer().innerHTML = this.docx$.placeholderData;
     this.setupEditor(this.getContainer().querySelector("div"))
 
   }
 
-  insertAllTablesToTemplates() {
+  insertAllTablesToTemplates(dir?: TableDirection) {
+    let count = 0;
+    let removeQueqe:number[] = [];
     console.log(this.originalDocxTableData, this.tableData);
     this.originalDocxTableData.forEach((oData,index) => {
-      for (let nData of this.tableData) {
+      this.tableData.forEach(nData=> {
         if (this.xls$.arrayEquals(oData.headers, nData.headers)) {
-          oData.ref.outerHTML = this.xls$.generateTable(nData.data, oData.dir);
-          this.originalDocxTableData.splice(index, 1);
-          break;
+          oData.ref.outerHTML = this.xls$.generateTable(nData.data, dir??oData.dir);
+          count++;
+          removeQueqe.push(index);
         }
-      }
+      })
     })
+    removeQueqe.forEach(index => this.originalDocxTableData.splice(index, 1));
+    this.announceInsertResult(count);
   }
-  insertTableToTemplate(data: XlsTableData) {
+  insertTableToTemplate(data: XlsTableData, dir?: TableDirection) {
+    let count = 0;
     this.originalDocxTableData.forEach((oData,index) => {
       if (this.xls$.arrayEquals(oData.headers, data.headers)) {
-        oData.ref.outerHTML = this.xls$.generateTable(data.data, oData.dir);
+        oData.ref.outerHTML = this.xls$.generateTable(data.data,dir??oData.dir);
         this.originalDocxTableData.splice(index, 1);
-        return;
+        count++;
       }
     })
+    this.announceInsertResult(count);
+  }
+
+  announceInsertResult(count: number) {
+    if (count > 0) {
+      this._snackBar.open(`Đã chèn vào ${count} bảng!`);
+    } else {
+      this._snackBar.open('Không tìm thấy bảng nào có thể chèn!')
+    }
   }
   getAllTableData(elem: HTMLElement) {
     let result: DocxTableData[] = [];
@@ -140,6 +156,7 @@ export class HomeComponent implements OnInit {
       const file = fileList[i];
       this.xls$.readExcelFile(file,(data)=>{
         this.tableData = [...this.tableData, ...data];
+        console.log(this.tableData);
       });
     }
   }
@@ -160,12 +177,17 @@ export class HomeComponent implements OnInit {
       data: data,
     });
   }
+  removeTableData(index: number) {
+    this.tableData.splice(index, 1);
+  }
 
   openXLSForm() {
+    (document.getElementById("xls") as any).value = null;
     document.getElementById("xls")?.click();
   }
 
   openDOCXForm() {
+    (document.getElementById("docx") as any).value = null;
     if (!this.gconvert$.isSignedIn) this.gconvert$.signIn();
       else document.getElementById("docx")?.click();
   }
